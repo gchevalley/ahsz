@@ -1,7 +1,7 @@
 #!/bin/bash
 
 : ${HADOOP_PREFIX:=/usr/local/hadoop}
-: ${ZEPPELIN_HOME:=/usr/local/incubator-zeppelin}
+: ${ZEPPELIN_HOME:=/usr/local/zeppelin}
 
 $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 
