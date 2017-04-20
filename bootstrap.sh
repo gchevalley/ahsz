@@ -1,7 +1,7 @@
 #!/bin/bash
 
 : ${HADOOP_PREFIX:=/usr/local/hadoop}
-: ${ZEPPELIN_HOME:=/usr/local/zeppelin}
+: ${ZEPPELIN_PREFIX:=/usr/local/zeppelin}
 
 $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 
@@ -13,21 +13,16 @@ cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; 
 # altering the core-site configuration
 sed s/HOSTNAME/$HOSTNAME/ /usr/local/hadoop/etc/hadoop/core-site.xml.template > /usr/local/hadoop/etc/hadoop/core-site.xml
 
-# setting spark defaults
-echo spark.yarn.jar hdfs:///spark/spark-assembly-1.6.0-hadoop2.6.0.jar > $SPARK_HOME/conf/spark-defaults.conf
-cp $SPARK_HOME/conf/metrics.properties.template $SPARK_HOME/conf/metrics.properties
 
-service sshd start
+service ssh start
 $HADOOP_PREFIX/sbin/start-dfs.sh
 $HADOOP_PREFIX/sbin/start-yarn.sh
-$ZEPPELIN_HOME/bin/zeppelin-daemon.sh start
+$ZEPPELIN_PREFIX/bin/zeppelin-daemon.sh start
 
+if [[ $1 == "-d" ]]; then
+  while true; do sleep 1000; done
+fi
 
-CMD=${1:-"exit 0"}
-if [[ "$CMD" == "-d" ]];
-then
-	service sshd stop
-	/usr/sbin/sshd -D -d
-else
-	/bin/bash -c "$*"
+if [[ $1 == "-bash" ]]; then
+  /bin/bash
 fi
